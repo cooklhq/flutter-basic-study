@@ -15,7 +15,7 @@ final routes={
       '/search':(context,{arguments})=>SearchPage(arguments:arguments),
 };
 
-//固定写法
+//固定写法(原版好像有问题)
 var onGenerateRoute=(RouteSettings settings) {
       // 统一处理
       final String name = settings.name; 
@@ -33,4 +33,25 @@ var onGenerateRoute=(RouteSettings settings) {
             return route;
         }
       }
+};
+
+
+//固定写法(自己修改后可用的版本)
+Route<dynamic> onGenerateRoute(RouteSettings settings) {
+  // 统一处理
+  final String name = settings.name;
+  final Function pageContentBuilder = routes[name];
+  if (pageContentBuilder != null) {
+    if (settings.arguments != null) {
+      final Route route = MaterialPageRoute(
+          builder: (context) =>
+              pageContentBuilder(context, arguments: settings.arguments));
+      return route;
+    } else {
+      final Route route =
+          MaterialPageRoute(builder: (context) => pageContentBuilder(context));
+      return route;
+    }
+  }
+  return null;
 };
